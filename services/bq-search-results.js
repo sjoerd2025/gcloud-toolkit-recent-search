@@ -1,8 +1,8 @@
 const { BigQuery } = require("@google-cloud/bigquery");
 const config = require('../config.js');
+const bigqueryClient = new BigQuery();
 
 async function insertRowsAsStream(datasetId, tableId, rows) {
-  const bigqueryClient = new BigQuery();
   // Insert data into a table
   try {
     const result = await new Promise((resolve, reject) => {
