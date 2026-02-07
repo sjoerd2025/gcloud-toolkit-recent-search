@@ -45,16 +45,25 @@ async function createDataSet(dataSetName) {
 async function createTables(datasetId) {
     //create tables
     const tweets_schema = fs.readFileSync('./schema/tweets.json');
-    const [tweets_table] = await bigquery.dataset(datasetId).createTable(config.bq.table.tweets, { schema: JSON.parse(tweets_schema), location: 'US' });
-    console.log(`Table ${tweets_table.id} created.`);
-
     const users_schema = fs.readFileSync('./schema/users.json');
-    const [users_table] = await bigquery.dataset(datasetId).createTable(config.bq.table.users, { schema: JSON.parse(users_schema), location: 'US' });
-    console.log(`Table ${users_table.id} created.`);
-
     const media_schema = fs.readFileSync('./schema/media.json');
-    const [media_table] = await bigquery.dataset(datasetId).createTable(config.bq.table.media, { schema: JSON.parse(media_schema), location: 'US' });
-    console.log(`Table ${media_table.id} created.`);
+
+    const p1 = bigquery.dataset(datasetId).createTable(config.bq.table.tweets, { schema: JSON.parse(tweets_schema), location: 'US' })
+        .then(([tweets_table]) => {
+            console.log(`Table ${tweets_table.id} created.`);
+        });
+
+    const p2 = bigquery.dataset(datasetId).createTable(config.bq.table.users, { schema: JSON.parse(users_schema), location: 'US' })
+        .then(([users_table]) => {
+            console.log(`Table ${users_table.id} created.`);
+        });
+
+    const p3 = bigquery.dataset(datasetId).createTable(config.bq.table.media, { schema: JSON.parse(media_schema), location: 'US' })
+        .then(([media_table]) => {
+            console.log(`Table ${media_table.id} created.`);
+        });
+
+    await Promise.all([p1, p2, p3]);
 }
 
 module.exports = { provisionDB };
