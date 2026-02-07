@@ -54,28 +54,26 @@ async function recentSearch(reqBody, nextToken) {
   if (rcntSearch.endTime != undefined && rcntSearch.endTime != null)
     query = query + '&end_time=' + rcntSearch.endTime;
   console.log('Recent search query : ', query);
-  return new Promise(function (resolve, reject) {
-    let userConfig = {
-      method: 'get',
-      url: query,
-      headers: { 'Authorization': config.twitter_bearer_token }
-    };
-    axios(userConfig)
-      .then(function (response) {
-        if (response.data.data != null) {
-          //console.log('response --',response.data);
-          bq_persist.insertSearchResults(response.data, reqBody);
-        }
-        if (response.data.meta != undefined && response.data.meta.next_token != undefined) {
-          recentSearch(reqBody, response.data.meta.next_token);
-        }
-        resolve('Recent Search results are persisted in database');
-      })
-      .catch(function (error) {
-        console.log('ERROR ',error.response.data);
-        reject(error.response.data);
-      });
-  });
+  let userConfig = {
+    method: 'get',
+    url: query,
+    headers: { 'Authorization': config.twitter_bearer_token }
+  };
+  return axios(userConfig)
+    .then(function (response) {
+      if (response.data.data != null) {
+        //console.log('response --',response.data);
+        bq_persist.insertSearchResults(response.data, reqBody);
+      }
+      if (response.data.meta != undefined && response.data.meta.next_token != undefined) {
+        recentSearch(reqBody, response.data.meta.next_token);
+      }
+      return 'Recent Search results are persisted in database';
+    })
+    .catch(function (error) {
+      console.log('ERROR ',error.response.data);
+      throw error.response.data;
+    });
 }
 
 module.exports = router;
