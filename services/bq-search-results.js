@@ -5,25 +5,16 @@ const bigqueryClient = new BigQuery();
 async function insertRowsAsStream(datasetId, tableId, rows) {
   // Insert data into a table
   try {
-    const result = await new Promise((resolve, reject) => {
-      bigqueryClient
-        .dataset(datasetId)
-        .table(tableId)
-        .insert(rows)
-        .then((results) => {
-          console.log(`Inserted ${rows.length} rows into ${tableId} for dataset ${datasetId}`);
-          resolve(rows);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+    await bigqueryClient
+      .dataset(datasetId)
+      .table(tableId)
+      .insert(rows);
+    console.log(`Inserted ${rows.length} rows into ${tableId} for dataset ${datasetId}`);
   } catch (error) {
     console.log("----BQ JSON Error --- \n ", JSON.stringify(error), "\n");
     throw new Error(error);
   }
 }
-
 async function insertTweets(data, reqBody) {
   var resultRows = [];
   data.forEach(function (tweet, index) {
