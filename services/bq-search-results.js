@@ -129,4 +129,4 @@ async function insertSearchResults(results, reqBody) {
     insertMedia(media, reqBody);
 }
 
-module.exports = { insertSearchResults };
+module.exports = { insertSearchResults, insertTweets, insertUsers, insertMedia };
