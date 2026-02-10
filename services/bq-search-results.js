@@ -27,7 +27,6 @@ async function insertRowsAsStream(datasetId, tableId, rows) {
 async function insertTweets(data, reqBody) {
   var resultRows = [];
   data.forEach(function (tweet, index) {
-    //console.log('FAS Response -- ', tweet);
     if (tweet) {
       var cDate = new Date(tweet.created_at);
       if( tweet.context_annotations === undefined)
