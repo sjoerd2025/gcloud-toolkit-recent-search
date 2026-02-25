@@ -5,7 +5,6 @@ const axiosRetry = require("axios-retry");
 const config = require('../config.js');
 const bq_persist = require('.././services/bq-search-results.js');
 const bq_dataset = require('.././services/bq-dataset.js');
-// const utils = require('.././services/utils.js');
 
 var ruleCategory;
 axiosRetry(axios, {
@@ -62,7 +61,6 @@ async function recentSearch(reqBody, nextToken) {
   return axios(userConfig)
     .then(function (response) {
       if (response.data.data != null) {
-        //console.log('response --',response.data);
         bq_persist.insertSearchResults(response.data, reqBody);
       }
       if (response.data.meta != undefined && response.data.meta.next_token != undefined) {
